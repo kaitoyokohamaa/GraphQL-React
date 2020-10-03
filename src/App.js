@@ -1,11 +1,12 @@
 import React from 'react';
-const GITHUB_TOKEN=process.env.REACT_APP_GITHUB_TOKEN
-console.log({GITHUB_TOKEN})
+import {ApolloProvider} from "react-apollo"
+import client from "./client"
+
 function App() {
   return (
-    <div>
-    hello, graphQL
-    </div>
+    <ApolloProvider client={client}>
+      <div>hello, graphQL</div>
+    </ApolloProvider>
   );
 }
 
