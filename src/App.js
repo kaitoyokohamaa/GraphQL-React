@@ -15,8 +15,6 @@ const VARIABLES = {
 function App() {
   const [variable,setValiables] = useState(VARIABLES)
   const {query, first, last, before, after}=variable
-  console.log(variable)
-  console.log({query})
   return (
     <ApolloProvider client={client}>
       <React.Fragment>
@@ -39,8 +37,11 @@ function App() {
             ({ loading, error, data})=>{
               if(loading) return "loading..."
               if(error) return `Error ${error.message}`
-              console.log(data)
-              return <div>{}</div>
+              const search = data.search
+              const repositoryCount=search.repositoryCount
+              const resitoryUnit = repositoryCount ===1? "Repository" : "Repositories"
+              const title = `GitHub Repositories Search Results - ${repositoryCount} ${resitoryUnit}`
+              return <div>{title}</div>
             }
           }
         </Query>
