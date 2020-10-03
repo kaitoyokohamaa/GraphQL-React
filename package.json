@@ -7,6 +7,7 @@
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
     "apollo-boost": "^0.1.16",
+    "apollo-cache-inmemory": "^1.6.6",
     "graphql": "^14.0.2",
     "react": "^16.13.1",
     "react-apollo": "^2.1.11",
