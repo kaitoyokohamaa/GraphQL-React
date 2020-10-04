@@ -45,7 +45,7 @@ function App() {
             }
           }
         </Query>
-    </React.Fragment>
+      </React.Fragment>
     </ApolloProvider>
   );
 }
