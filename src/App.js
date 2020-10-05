@@ -52,13 +52,12 @@ function App() {
           variables={variable}
         >
           {
-            
             ({ loading, error, data})=>{
               if(loading) return "loading..."
               if(error) return `Error ${error.message}`
               const search = data.search
               const repositoryCount=search.repositoryCount
-              const resitoryUnit = repositoryCount ===1? "Repository" : "Repositories"
+              const resitoryUnit = repositoryCount === 1? "Repository" : "Repositories"
               const title = `GitHub Repositories Search Results - ${repositoryCount} ${resitoryUnit}`
               return (
                 <React.Fragment>
@@ -66,7 +65,7 @@ function App() {
                   <ul>
                     {
                       search.edges.map((edge)=>{
-                        const node=edge.node
+                        const node = edge.node
                         return(
                           <li key={node.id}>
                             <a href={node.url} target="_blank" rel="noopener noreferrer">{node.name}</a>
