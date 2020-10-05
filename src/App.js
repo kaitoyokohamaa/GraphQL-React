@@ -4,6 +4,13 @@ import client from "./client"
 import { Query } from "react-apollo"
 import {SEARCH_REPOSITORIES} from "./graphql"
 
+const StarButton = props =>{
+  const totalCount = props.node.stargazers.totalCount
+  return(
+    <button>{totalCount === 1 ? "1 star" : `${totalCount} stars`}</button>
+  )
+}
+
 const VARIABLES = {
   first:5,
   after:null,
@@ -14,7 +21,7 @@ const VARIABLES = {
 
 function App() {
   const [variable,setValiables] = useState(VARIABLES)
-  const [queryies, setQueries] =useState("　")
+  const [queryies, setQueries] =useState("")
   const PER_PAGE=5  
   const changeHandler = (e) =>{
     setQueries(e.target.value) 
@@ -81,6 +88,7 @@ function App() {
                         return(
                           <li key={node.id}>
                             <a href={node.url} target="_blank" rel="noopener noreferrer">{node.name}</a>
+                           <StarButton node={node}/>
                           </li>
                         )
                       })
