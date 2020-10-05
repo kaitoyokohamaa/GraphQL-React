@@ -14,7 +14,7 @@ const VARIABLES = {
 
 function App() {
   const [variable,setValiables] = useState(VARIABLES)
-  const [queryies, setQueries] =useState("")
+  const [queryies, setQueries] =useState("　")
   const PER_PAGE=5  
   const changeHandler = (e) =>{
     setQueries(e.target.value) 
@@ -28,7 +28,6 @@ function App() {
    } 
 
    const getNext = (search) =>{
-    console.log({queryies})
     if( queryies ){
       setValiables({
         first:PER_PAGE,
@@ -37,7 +36,20 @@ function App() {
         before:null,
         query:queryies
         })
-    }else if (　queryies　===　"" ){
+    }else if (queryies　===　""){
+      alert("文字を入力してください")
+    }
+   }
+   const getPrevious = (search) =>{
+    if( queryies ){
+      setValiables({
+        first:null,
+        after:null,
+        last:PER_PAGE,
+        before:search.pageInfo.startCusor,
+        query:queryies
+        })
+    }else if (queryies　===　""){
       alert("文字を入力してください")
     }
    }
@@ -74,6 +86,16 @@ function App() {
                       })
                     }
                   </ul>
+                  {
+                    search.pageInfo.hasPreviousPage === true ?
+                    <button
+                    onClick={()=>getPrevious(search)}
+                    >
+                      Previous
+                    </button>
+                    :
+                    null
+                  }
                   {
                     search.pageInfo.hasNextPage === true ?
                       <button
