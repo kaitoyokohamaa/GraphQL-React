@@ -4,7 +4,7 @@ import client from './client'
 import { ADD_STAR, REMOVE_STAR, SEARCH_REPOSITORIES } from './graphql'
 
 const StarButton = props =>{
-  const node = props.node
+  const { node, query, first, last, before, after } = props
   const totalCount = node.stargazers.totalCount
   const viewerHasStarred = node.viewerHasStarred
   const starCount= totalCount === 1 ? "1 star" : `${totalCount} stars`
@@ -21,26 +21,39 @@ const StarButton = props =>{
          </button>
      )
   }
-
+console.log( query, first, last, before, after )
   return(
-    <Mutation mutation={viewerHasStarred ? REMOVE_STAR : ADD_STAR}>
+    <Mutation
+     mutation={viewerHasStarred ? REMOVE_STAR : ADD_STAR}
+     refetchQueries={mutationResult=>{
+       console.log(mutationResult)
+     return[
+        {
+          query:SEARCH_REPOSITORIES,
+          variables: { query, first, last, before, after }
+        }
+      ]
+     }}
+      >
       {
-        addOrRemoveStar => <StarStatus addOrRemoveStar={addOrRemoveStar}/>
+        addOrRemoveStar => <StarStatus addOrRemoveStar={addOrRemoveStar} />
       }
     </Mutation>
   )
+
 }
 
-const VARIABLES = {
-  first:5,
-  after:null,
-  last:null,
-  before:null,
-  query:""
-}
 
 function App() {
+  const VARIABLES = {
+    first:5,
+    after:null,
+    last:null,
+    before:null,
+    query:""
+  }
   const [variable,setValiables] = useState(VARIABLES)
+  const { query, first, last, before, after } = variable
   const [queryies, setQueries] =useState("")
   const PER_PAGE=5  
   const changeHandler = (e) =>{
@@ -64,7 +77,7 @@ function App() {
         query:queryies
         })
     }else if (queryies　===　""){
-      alert("文字を入力してください")
+      alert("本文が入力されてません")
     }
    }
    const getPrevious = (search) =>{
@@ -73,11 +86,11 @@ function App() {
         first:null,
         after:null,
         last:PER_PAGE,
-        before:search.pageInfo.startCusor,
+        before: search.pageInfo.startCursor,
         query:queryies
         })
     }else if (queryies　===　""){
-      alert("文字を入力してください")
+      alert("本文が入力されてません")
     }
    }
   return (
@@ -108,7 +121,7 @@ function App() {
                         return(
                           <li key={node.id}>
                             <a href={node.url} target="_blank" rel="noopener noreferrer">{node.name}</a>
-                           <StarButton node={node}/>
+                           <StarButton node={node} {...{query, first, last, after, before}}/>
                           </li>
                         )
                       })
@@ -117,8 +130,8 @@ function App() {
                   {
                     search.pageInfo.hasPreviousPage === true ?
                     <button
-                    onClick={()=>getPrevious(search)}
-                    >
+                      onClick={()=>getPrevious(search)}
+                      >
                       Previous
                     </button>
                     :
