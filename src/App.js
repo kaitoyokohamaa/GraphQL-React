@@ -25,14 +25,15 @@ console.log( query, first, last, before, after )
   return(
     <Mutation
      mutation={viewerHasStarred ? REMOVE_STAR : ADD_STAR}
-     refetchQueries={
-          [
-            {
-              query:SEARCH_REPOSITORIES,
-              variables: { query, first, last, before, after }
-            }
-          ]
+     refetchQueries={mutationResult=>{
+       console.log(mutationResult)
+     return[
+        {
+          query:SEARCH_REPOSITORIES,
+          variables: { query, first, last, before, after }
         }
+      ]
+     }}
       >
       {
         addOrRemoveStar => <StarStatus addOrRemoveStar={addOrRemoveStar} />
@@ -42,15 +43,15 @@ console.log( query, first, last, before, after )
 
 }
 
-const VARIABLES = {
-  first:5,
-  after:null,
-  last:null,
-  before:null,
-  query:"フロントエンドエンジニア"
-}
 
 function App() {
+  const VARIABLES = {
+    first:5,
+    after:null,
+    last:null,
+    before:null,
+    query:""
+  }
   const [variable,setValiables] = useState(VARIABLES)
   const { query, first, last, before, after } = variable
   const [queryies, setQueries] =useState("")
@@ -76,7 +77,7 @@ function App() {
         query:queryies
         })
     }else if (queryies　===　""){
-      alert("文字を入力してください")
+      alert("本文が入力されてません")
     }
    }
    const getPrevious = (search) =>{
@@ -89,7 +90,7 @@ function App() {
         query:queryies
         })
     }else if (queryies　===　""){
-      alert("文字を入力してください")
+      alert("本文が入力されてません")
     }
    }
   return (
