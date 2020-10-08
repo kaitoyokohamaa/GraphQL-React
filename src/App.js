@@ -1,4 +1,4 @@
-import React,{ useState } from 'react';
+import React,{ useState ,useRef } from 'react';
 import { ApolloProvider, Mutation, Query } from 'react-apollo'
 import client from './client'
 import { ADD_STAR, REMOVE_STAR, SEARCH_REPOSITORIES } from './graphql'
@@ -40,7 +40,6 @@ const StarButton = props =>{
          </button>
      )
   }
-console.log( query, first, last, before, after )
   return(
     <Mutation
      mutation={viewerHasStarred ? REMOVE_STAR : ADD_STAR}
@@ -65,18 +64,9 @@ function App() {
   const [variable,setValiables] = useState(VARIABLES)
   const { query, first, last, before, after } = variable
   const [queryies, setQueries] =useState("")
-  const PER_PAGE=5  
-  const changeHandler = (e) =>{
-    setQueries(e.target.value) 
-    setValiables({
-      first:PER_PAGE,
-      after:null,
-      last:null,
-      before:null,
-      query:queryies
-      })
-   } 
+  const ref = useRef();
 
+  const PER_PAGE=5  
    const getNext = (search) =>{
     if( queryies ){
       setValiables({
@@ -103,15 +93,29 @@ function App() {
       alert("本文が入力されてません")
     }
    }
+   const handlesubmit=(e)=>{
+     e.preventDefault()
+     setQueries(ref.current.value)
+     setValiables({
+      first:null,
+      after:null,
+      last:PER_PAGE,
+      before: null,
+      query:ref.current.value
+     })
+   }
+
+
   return (
     <ApolloProvider client={client}>
       <React.Fragment>
-        <form>
-          <input value={queryies} onChange={(e)=>changeHandler(e)}/>
+        <form onSubmit={handlesubmit}> 
+          <input ref={ref}/>
+          <input type="submit" value="submit" /> 
         </form>
         <Query 
           query={SEARCH_REPOSITORIES}
-          variables={variable}
+          variables={{query, first, last, before, after }}
         >
           {
             ({ loading, error, data})=>{
