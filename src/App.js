@@ -16,7 +16,6 @@ const StarButton = props =>{
                 variables: { input: { starrableId: node.id} },
                 update:( store, { data:{ addStar, removeStar } }) =>{
                   const {starrable} = addStar||removeStar
-                  // console.log({starrable})
                   const data = store.readQuery({
                     query : SEARCH_REPOSITORIES,
                     variables : {query, first, last, before, after}
@@ -25,7 +24,6 @@ const StarButton = props =>{
                 const newEdges= edges.map(edge =>{
                     if(edge.node.id === node.id){
                         const totalCount = edge.node.stargazers.totalCount
-                        // const diff = viewerHasStarred ? -1 : 1 
                         const diff = starrable.viewerHasStarred ? 1 :-1
                         const newTotalCount = totalCount + diff
                         edge.node.stargazers.totalCount=newTotalCount
